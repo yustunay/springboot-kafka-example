@@ -1,40 +1,15 @@
 package com.example.kafka.domain;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class User implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class User {
 	private String name;
 	private String message;
-	
-	public User() {
-	}
-
-	public User(String name, String message) {
-		this.name = name;
-		this.message = message;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	@Override
-	public String toString() {
-		return "User [name=" + name + ", message=" + message + "]";
-	}
-	
 }

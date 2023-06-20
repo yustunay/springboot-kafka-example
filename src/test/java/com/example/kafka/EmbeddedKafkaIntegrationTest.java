@@ -45,27 +45,19 @@ class EmbeddedKafkaIntegrationTest {
     @Test
     public void givenEmbeddedKafkaBroker_whenSendingWithDefaultTemplate_thenMessageReceived()
       throws Exception {
-        String data = "Sending with default template";
-        User user = new User("Ege", data);
-
+        User user = User.builder().message("Sending with default template").name("Ege").build();
         kafkaTemplate.send(topic, user);
-        
         boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
-        assertThat(consumer.getPayload().getName(), is("Ege"));
-        assertThat(consumer.getPayload().getMessage(), is(data));
+        assertTrue(consumer.getPayload().equals(user));
     }
 
     @Test
     public void givenEmbeddedKafkaBroker_whenSendingWithSimpleProducer_thenMessageReceived() throws Exception {
-        String data = "Sending with our own simple KafkaProducer";
-        User user = new User("Deniz", data);
-
+        User user = User.builder().message("Sending with our own simple KafkaProducer").name("Deniz").build();
         producer.send(topic, user);
-
         boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
-        assertThat(consumer.getPayload().getName(), is("Deniz"));
-        assertThat(consumer.getPayload().getMessage(), is(data));
+        assertTrue(consumer.getPayload().equals(user));
     }
 }

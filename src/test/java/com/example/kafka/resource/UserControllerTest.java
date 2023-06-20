@@ -20,8 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,11 +45,8 @@ class UserControllerTest {
     }
 
     @Test
-    void publish() throws Exception {
-        User user = new User();
-        user.setName("Yahya");
-        user.setMessage("Test message!");
-
+    void testPublishMessage_ThenReceivedSuccessfully() throws Exception {
+        User user = User.builder().message("Test Message!").name("Yahya").build();
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/kafka/publish")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(user));
@@ -63,7 +58,6 @@ class UserControllerTest {
 
         boolean messageConsumed = consumer.getLatch().await(10, TimeUnit.SECONDS);
         assertTrue(messageConsumed);
-        assertThat(consumer.getPayload().getName(), is(user.getName()));
-        assertThat(consumer.getPayload().getMessage(), is(user.getMessage()));
+        assertTrue(consumer.getPayload().equals(user));
     }
 }
