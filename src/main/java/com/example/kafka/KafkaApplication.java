@@ -22,7 +22,10 @@ public class KafkaApplication implements CommandLineRunner {
  
     @Value("${message.topic.name}")
     private String topicName;
- 
+
+    @Value("${spring.kafka.consumer.group-id}")
+    private String groupId;
+
     private final KafkaTemplate<String, User> kafkaTemplate;
  
     @Autowired
@@ -44,9 +47,9 @@ public class KafkaApplication implements CommandLineRunner {
         LOG.info("Published message to topic: {}.", topicName);
     }
  
-    @KafkaListener(topics = "${message.topic.name}", groupId = "jcg-group")
+    @KafkaListener(topics = "${message.topic.name}", groupId = "${spring.kafka.consumer.group-id}")
     public void listen(User message) {
-        LOG.info("Received message in JCG group: {}", message);
+        LOG.info("Received message in {} group: {}", groupId, message);
     }
  
 }

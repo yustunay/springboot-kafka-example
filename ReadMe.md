@@ -100,6 +100,11 @@ $ docker exec --interactive --tty broker \
                        --from-beginning
 ```
 
+### Test The Api After Starting The Spring Boot service
+```shell
+$ curl -X GET http://localhost:9090/kafka/publish/new-message
+```
+
 ### Stop the Kafka broker
 ```shell
 $ docker compose down
