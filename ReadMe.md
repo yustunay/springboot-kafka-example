@@ -105,7 +105,7 @@ $ docker exec --interactive --tty broker \
 $ curl -X GET http://localhost:9090/kafka/publish/new-message
 ```
 
-### Stop the Kafka broker
+### Stop the Kafka broker and Zookeeper
 ```shell
 $ docker compose down
 ```
