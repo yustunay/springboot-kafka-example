@@ -55,6 +55,55 @@ networks:
     driver: bridge
 ```
 
+Run Docker Compose with the following command
+```shell
+$ docker-compose up -d
+```
+
+Now let's use the **nc command to verify that both the servers are listening on the respective ports**:
+```shell
+$ nc -z localhost 2181
+Connection to localhost port 2181 [tcp/*] succeeded!
+$ nc -z localhost 9092
+Connection to localhost port 9092 [tcp/*] succeeded!
+```
+
+### Create a topic
+```shell
+$ docker exec broker \
+  kafka-topics --bootstrap-server broker:9092 \
+  --create \
+  --topic test-topic
+
+Created topic test-topic.  
+```
+
+### Write messages to the topic
+```shell
+$ docker exec --interactive --tty broker \
+  kafka-console-producer --bootstrap-server broker:9092 \
+                       --topic test-topic
+```
+Type in some lines of text. Each line is a new message.
+```
+> this is my first kafka message
+> hello world!
+> this is my third kafka message
+```
+When you’ve finished, enter Ctrl-C to return to your command prompt.
+
+### Read messages from the topic
+```shell
+$ docker exec --interactive --tty broker \
+  kafka-console-consumer --bootstrap-server broker:9092 \
+                       --topic test-topic \
+                       --from-beginning
+```
+
+### Stop the Kafka broker
+```shell
+$ docker compose down
+```
 
 ### Kafka Features
 Apache Kafka is a distributed streaming platform that provides the following key features:
@@ -105,7 +154,3 @@ Kafka provides **replication** of partitions across multiple brokers for fault t
 These components work together to create a reliable, scalable, and distributed streaming platform for handling real-time data processing and messaging requirements.
 
 For more detailed information on Apache Kafka and its components, refer to the [official documentation](https://kafka.apache.org/documentation/).
-
-
-
-For more information on Apache Kafka, refer to the [official documentation](https://kafka.apache.org/documentation/).
