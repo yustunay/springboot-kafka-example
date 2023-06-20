@@ -15,16 +15,16 @@ import org.springframework.messaging.support.MessageBuilder;
 
 import com.example.kafka.domain.User;
 
+import java.util.concurrent.CountDownLatch;
+
 @SpringBootApplication
 public class KafkaApplication implements CommandLineRunner {
- 
+
+    private CountDownLatch latch = new CountDownLatch(1);
     private static final Logger LOG = LoggerFactory.getLogger("KafkaApp");
  
     @Value("${message.topic.name}")
     private String topicName;
-
-    @Value("${spring.kafka.consumer.group-id}")
-    private String groupId;
 
     private final KafkaTemplate<String, User> kafkaTemplate;
  
@@ -42,14 +42,10 @@ public class KafkaApplication implements CommandLineRunner {
         Message<User> message = MessageBuilder.withPayload(new User("Ege-Deniz","Merhabaaaa"))
 								              .setHeader(KafkaHeaders.TOPIC, topicName)
 								              .build();
-    	
+
         kafkaTemplate.send(message);
         LOG.info("Published message to topic: {}.", topicName);
     }
- 
-    @KafkaListener(topics = "${message.topic.name}", groupId = "${spring.kafka.consumer.group-id}")
-    public void listen(User message) {
-        LOG.info("Received message in {} group: {}", groupId, message);
-    }
+
  
 }
